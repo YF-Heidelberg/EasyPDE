@@ -1,8 +1,5 @@
-% dampening scheme for possion equations dT2/dx2=0
-%Write it in another format
-% Vx=dP/dx
-% dVxdx=f(x)
-
+% This script solve 1D diffusion equation with an explicit method.
+% One need to choose very small timestep to have accurate result!
 %Diffusion Eq: dTdt=D*Laplace(T)+f
 %Adding pseudo time: dTdtau=dTdt-D*Laplace(T)-f
 
@@ -49,7 +46,7 @@ while (time<ttol*0.99 &&it<10000)
        q=-D*diff(T)/dx;
       % dTdt=(D*diff(T,2,2)/dx/dx+f(2:end-1));
        dTdt=(-diff(q)/dx+f(2:end-1));
-       T(2:end-1)=T(2:end-1)+dt*dTdt;
+       T(2:end-1)=T(2:end-1)+dt*dTdt;  % assume fixed boundary condition!
     %itertol=itertol+iter;
  it=it+1;time=time+dt;
  Told=T;
