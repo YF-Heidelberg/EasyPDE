@@ -8,7 +8,7 @@ clear;clf
 
 Lx  = 10;       %model length. used as the length scale
 D   = 100;      %diffusion coefficient
-nx  = 25*2;    %nx cell
+nx  = 50*10;    %nx cell
 dx  = Lx/nx;    %cell width
 Imax= 100*nx;   %maximum iteration number
 tsc = Lx*Lx/D;  %diffusion timescale
@@ -35,21 +35,22 @@ dTdtau1 = zeros(1,nx-2); % pseudo time derivative!
 dTdtau2 = zeros(1,nx-2); % pseudo time derivative with dampening
 cnt  = 100;
 epsi = 1e-8; % accuracy for the convergence
-CFL  = 0.4;
+CFL  = 0.8;
 ndim = 1;
 dtau = CFL*dx*dx/2/D/ndim; % pseudo timestep!
-dt   = 100*dtau     % physical timestep, could be larger than dtau and be stable as it is implicit solution. 
+dt   = 10*dtau     % physical timestep, could be larger than dtau and be stable as it is implicit solution. 
 itertol = 0;
 time    = 0; 
 
 residdT  = 1e5;
 it       = 0;
-damp     = 1-6*pi/nx;% 0.93 %0.991 %
-kw       =1;
-A        =CFL*pi*pi*kw*kw/nx/nx;
-damp    = 1-2*sqrt(dtau/dt-A/2);
+damp     = 1-6*pi/nx;% 0.93 %0.991 %  WHL: does not work quite well with nx>=500.
+kw       = 1;
+A        = CFL*pi*pi*kw*kw/nx/nx/2;
+damp     = 1-2*sqrt(dtau/dt+A); # work with both low and high nx (50-2000)
 %WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx.
-% The time ratio is dominant over A/2 as A is very small!
+% The time ratio is dominant over A as A is very small! So one can simply use: 1-2*sqrt(dtau/dt)
+% Try low nx to test the effect of A, +A converge much faster than -A when nx=50. So +A is correct!
 dampening= 1;
 %while (time<ttol*0.99 &&it<10000)
 while it<10
