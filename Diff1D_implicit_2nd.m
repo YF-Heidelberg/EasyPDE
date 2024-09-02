@@ -8,7 +8,7 @@ clear;clf
 
 Lx  = 10;       %model length. used as the length scale
 D   = 100;      %diffusion coefficient
-nx  = 250*2;    %nx cell
+nx  = 25*2;    %nx cell
 dx  = Lx/nx;    %cell width
 Imax= 100*nx;   %maximum iteration number
 tsc = Lx*Lx/D;  %diffusion timescale
@@ -34,12 +34,11 @@ T(1) = Tana(1);T(end)=Tana(end);
 dTdtau1 = zeros(1,nx-2); % pseudo time derivative!
 dTdtau2 = zeros(1,nx-2); % pseudo time derivative with dampening
 cnt  = 100;
-epsi = 1e-5; % accuracy for the convergence
-dt   = 1e-3*tsc     %0.001*tsc
+epsi = 1e-8; % accuracy for the convergence
 CFL  = 0.4;
 ndim = 1;
 dtau = CFL*dx*dx/2/D/ndim; % pseudo timestep!
-dtau=1/(1.0/(dx*dx/D/2.1)+1.0/dt)
+dt   = 100*dtau     % physical timestep, could be larger than dtau and be stable as it is implicit solution. 
 itertol = 0;
 time    = 0; 
 
@@ -47,10 +46,13 @@ residdT  = 1e5;
 it       = 0;
 damp     = 1-6*pi/nx;% 0.93 %0.991 %
 kw       =1;
-damp    = 1-2*sqrt(dtau/dt+CFL/2*pi*pi*kw*kw/nx/nx)
-%WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx
+A        =CFL*pi*pi*kw*kw/nx/nx;
+damp    = 1-2*sqrt(dtau/dt-A/2);
+%WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx.
+% The time ratio is dominant over A/2 as A is very small!
 dampening= 1;
-while (time<ttol*0.99 &&it<10000)
+%while (time<ttol*0.99 &&it<10000)
+while it<10
 %for it=1:100
        iter     = 0; 
        residdT  = 2*epsi;
