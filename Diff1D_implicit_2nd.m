@@ -45,10 +45,11 @@ time    = 0;
 
 residdT  = 1e5;
 it       = 0;
-%damp     = 1-6*pi/nx;% 0.93 %0.991 %
-damp     = 1-pi/nx*sqrt(2*CFL/D);% 0.93 %0.991 %
-b=2*sqrt(1-CFL*pi*pi/nx/nx/2/D);
-damp = 1-b;
+damp     = 1-6*pi/nx;% 0.93 %0.991 %
+kw       =1;
+damp    = 1-2*sqrt(dtau/dt+CFL/2*pi*pi*kw*kw/nx/nx)
+%WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx
+dampening= 1;
 dampening= 1;
 while (time<ttol*0.99 &&it<10000)
 %for it=1:100
