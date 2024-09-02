@@ -50,7 +50,6 @@ kw       =1;
 damp    = 1-2*sqrt(dtau/dt+CFL/2*pi*pi*kw*kw/nx/nx)
 %WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx
 dampening= 1;
-dampening= 1;
 while (time<ttol*0.99 &&it<10000)
 %for it=1:100
        iter     = 0; 
