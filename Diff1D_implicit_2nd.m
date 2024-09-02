@@ -36,16 +36,19 @@ dTdtau2 = zeros(1,nx-2); % pseudo time derivative with dampening
 cnt  = 100;
 epsi = 1e-5; % accuracy for the convergence
 dt   = 1e-3*tsc     %0.001*tsc
-CFL  = 0.8;
+CFL  = 0.4;
 ndim = 1;
 dtau = CFL*dx*dx/2/D/ndim; % pseudo timestep!
-#dtaudiff=1/(1.0/(dx*dx/D/2.1)+1.0/dt)
+dtau=1/(1.0/(dx*dx/D/2.1)+1.0/dt)
 itertol = 0;
 time    = 0; 
 
 residdT  = 1e5;
 it       = 0;
-damp     = 1-6*pi/nx;% 0.93 %0.991 %
+%damp     = 1-6*pi/nx;% 0.93 %0.991 %
+damp     = 1-pi/nx*sqrt(2*CFL/D);% 0.93 %0.991 %
+b=2*sqrt(1-CFL*pi*pi/nx/nx/2/D);
+damp = 1-b;
 dampening= 1;
 while (time<ttol*0.99 &&it<10000)
 %for it=1:100
@@ -59,7 +62,7 @@ while (time<ttol*0.99 &&it<10000)
           T(2:nx-1) = T(2:nx-1) + dtau*dTdtau1;     %nx-2. Update T by pseudo time marching.  Lesson2:Eq.3)
       else               %****dTdtau2 contains the currect residual and the previous residual, which greatly speed up the convergence!
                          %The formulation can be derive with 2nd pseudo transient time derivative dT2dtau !
-          dTdtau2    = dTdtau1 + damp*dTdtau2; # 
+          dTdtau2    = dTdtau1 + damp*dTdtau2;  
           T(2:nx-1) = T(2:nx-1) + dtau*dTdtau2; % dTdtau is used 
       end
        residdT  = max(abs(dTdtau1)); %
