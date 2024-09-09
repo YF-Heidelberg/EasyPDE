@@ -66,8 +66,8 @@ while (time<ttol*0.99 &&it<10000)
        end   
     end
     it   = it+1;
-    time = time+dt;  # update the physical time!
-    Told = T;                # update the Told after one physical timestep.
+    time = time+dt;  % update the physical time!
+    Told = T;                % update the Told after one physical timestep.
     itertol = itertol+iter;
     fprintf('Step %d converged,residdT=%7.3e\n',it,residdT); 
 end
