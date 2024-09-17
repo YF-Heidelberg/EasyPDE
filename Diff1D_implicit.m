@@ -31,7 +31,7 @@ f    = sin(xc); f(:)=0;% f=0 to compare with the analytical solution that has no
 ttol = 1.6*t0 # As this script is slow. Lets compute a small ttol! 
 Tana = sqrt(t0/(t0+ttol)).*exp(-(xc-a).^2/(4*D*(t0+ttol)));
 T(1) = Tana(1);T(end)=Tana(end);
-dTdtau = zeros(1,nx-2); % pseudo time derivative!
+dTdtau1 = zeros(1,nx-2); % pseudo time derivative!
 
 cnt  = 100;
 epsi = 1e-5; % accuracy for the convergence
@@ -54,7 +54,7 @@ while (time<ttol*0.99 &&it<10000)
 %for iter=1:Imax
    while residdT>epsi && iter<Imax
        q        = -D*diff(T)/dx;    % dimension:nx-1
-       dTdau1       = -(T(2:nx-1)-Told(2:nx-1))/dt-diff(q)/dx; %dimension:nx-2. residual!  Lesson2:Eq.2)
+       dTdtau1       = -(T(2:nx-1)-Told(2:nx-1))/dt-diff(q)/dx; %dimension:nx-2. residual!  Lesson2:Eq.2)
       if dampening == 0  %**** simple and slow!
        T(2:nx-1)= T(2:nx-1) + dtau*dTdtau1; %nx-2. Update T by pseudo time marching.  Lesson2:Eq.3)
       end
