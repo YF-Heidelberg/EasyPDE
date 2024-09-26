@@ -54,9 +54,9 @@ ttol    = 0.01*tsc;
 residdT = 1e5;
 it      = 0;
 damp    = 1-12.0*pi/nx;% 0.93 % between 1-9/nx and 1-12/nx.
-# The above damp accelerate the convergence quite well when dt/dtau>100; but it would slow down the convergence when dt/dtau<=10. check the if it is true. 
-# However, we only need to use small dt for the explicit solution. For implicit solution, we usually use larger dt, such as 50*dtc. Thus, this choice of
-#  damp usually works fine!
+% The above damp accelerate the convergence quite well when dt/dtau>100; but it would slow down the convergence when dt/dtau<=10. check the if it is true. 
+% However, we only need to use small dt for the explicit solution. For implicit solution, we usually use larger dt, such as 50*dtc. Thus, this choice of
+%  damp usually works fine!
 kw      = 1;
 A       = CFL*pi*pi*kw*kw/nx/nx/2;
 damp      = 1-2*sqrt(dtau/dt+A); # A more delicated dampening parameter!
