@@ -48,7 +48,7 @@ it       = 0;
 damp     = 1-6*pi/nx;% 0.93 %0.991 %  WHL: does not work quite well with nx>=500.
 kw       = 1;
 A        = CFL*pi*pi*kw*kw/nx/nx/2;
-damp     = 1-2*sqrt(dtau/dt+A); # work with both low and high nx (50-2000)
+damp     = 1-2*sqrt(dtau/dt+A); # A more delicated dampening parameter! work with both low and high nx (50-2000)
 %WHL: This is the optimized dampening parameter I derived at 2Sep2024. It is faster than 1-6*pi/nx.
 % The time ratio is dominant over A as A is very small! So one can simply use: 1-2*sqrt(dtau/dt)
 % Try low nx to test the effect of A, +A converge much faster than -A when nx=50. So +A is correct!
