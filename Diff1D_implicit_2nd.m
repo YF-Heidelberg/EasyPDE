@@ -33,12 +33,13 @@ Tana = sqrt(t0/(t0+ttol)).*exp(-(xc-a).^2/(4*D*(t0+ttol)));
 T(1) = Tana(1);T(end)=Tana(end);
 dTdtau1 = zeros(1,nx-2); % pseudo time derivative!
 dTdtau2 = zeros(1,nx-2); % pseudo time derivative with dampening
-cnt  = 100;
+cnt  = 200;
 epsi = 1e-8; % accuracy for the convergence
-CFL  = 0.8;
 ndim = 1;
-dtau = CFL*dx*dx/2/D/ndim; % pseudo timestep!
-dt   = 10*dtau     % physical timestep, could be larger than dtau and be stable as it is implicit solution. 
+dtc  = dx*dx/2/D/ndim;
+CFL  = 0.9;
+dtau = CFL*dtc; % pseudo timestep!
+dt   = 500*dtc     % physical timestep, could be larger than dtau and be stable as it is implicit solution. 
 itertol = 0;
 time    = 0; 
 
@@ -53,7 +54,8 @@ damp     = 1-2*sqrt(dtau/dt+A); # work with both low and high nx (50-2000)
 % Try low nx to test the effect of A, +A converge much faster than -A when nx=50. So +A is correct!
 dampening= 1;
 %while (time<ttol*0.99 &&it<10000)
-while it<10
+#while it<100
+while time<0.99*ttol
 %for it=1:100
        iter     = 0; 
        residdT  = 2*epsi;
