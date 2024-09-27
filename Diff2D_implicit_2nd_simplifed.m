@@ -29,7 +29,7 @@ T       = T0;
 f       = zeros(nx,ny);f(nx/2,ny/2)=1;
 %Boundary condition
 %T(1)=Tana(1);T(end)=Tana(end);
-dTdtau2    = zeros(nx-2,ny-2);
+dTdt    = zeros(nx-2,ny-2);
 %P([1 end])=0;
 % rho*dqdt=q+dTdx
 % 1/K*dTdt=dqdx
@@ -67,18 +67,16 @@ while (time<ttol*0.99 &&it<2)
       residdT = 2*epsi;
 %for iter=1:Imax
    while residdT>epsi && iter<Imax  || iter<force_iter
-        qx      = -D*diff(T,1,1)/dx; # nx-1,ny
-        qy      = -D*diff(T,1,2)/dy; # nx,ny-1
-        dTdtau1 = -(T(2:nx-1,2:ny-1)-Told(2:nx-1,2:ny-1))/dt-diff(qx(:,2:ny-1),1,1)/dx-diff(qy(2:nx-1,:),1,2)/dy;
-        %dTdtau1   = -(T(2:nx-1,2:ny-1)-Told(2:nx-1,2:ny-1))/dt+(D*(diff(T(2:nx-1,:),2,2)+diff(T(:,2:ny-1),2,1))+f(2:nx-1,2:ny-1)); # simplified version!
+
+      RT   = -(T(2:nx-1,2:ny-1)-Told(2:nx-1,2:ny-1))/dt+(D*(diff(T(2:nx-1,:),2,2)+diff(T(:,2:ny-1),2,1))+f(2:nx-1,2:ny-1));
       %****2nd pseudo time derivative dT2dtau is used!
       if dampening==1
-        dTdtau2             = damp*dTdtau2 + dTdtau1;
-        T(2:nx-1,2:ny-1) = T(2:nx-1,2:ny-1) + dtau.*dTdtau2;
-        residdT          = max(abs(dTdtau1(:)));
+        dTdt             = damp*dTdt + RT;
+        T(2:nx-1,2:ny-1) = T(2:nx-1,2:ny-1) + dtau.*dTdt;
+        residdT          = max(abs(RT(:)));
       else  %****1st pseudo time derivative dTdtau is used. simple and slow! 
-        T(2:nx-1,2:ny-1) = T(2:nx-1,2:ny-1) + dtau*dTdtau1;
-        residdT          = max(abs(dTdtau1(:))); %
+        T(2:nx-1,2:ny-1) = T(2:nx-1,2:ny-1) + dtau*RT;
+        residdT          = max(abs(RT(:))); %
       end
    
     %if residdT<epsi break; end   
@@ -96,6 +94,3 @@ end
 
 
 fprintf('Total %d step are calculated.\n The physical time is =%3.2f, totel iteration is %d (%3.1f *nx), with dampeng=%d\n',it,time,itertol,itertol/nx,dampening); 
-
-
-# More practices with initial and boundary conditions are needed!
