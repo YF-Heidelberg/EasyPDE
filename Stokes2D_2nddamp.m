@@ -19,9 +19,9 @@ ny           = Rxy*nx;
 dx           = Lx/nx;
 
 CFL          = 0.9;
-beta_n       = 100
+beta_n       = 10
 niter        = 500*max(nx,ny);
-epsi         = 1e-3
+epsi         = 1e-4
 
 % preprocessing
 dx           = Lx/nx; %nx as cell number
@@ -60,9 +60,14 @@ Txx  = zeros(nx,ny);
 Tyy  = zeros(nx,ny);
 Txy  = zeros(nx+1,ny+1);
 
-%Vx   =  v0*sin(pi*xVx / Lx      ).*cos(pi*yVx /(Ly-  dy));Vx(1,:)=0;Vx(end,:)=0;
-%Vy   = -v0*cos(pi*xVy /(Lx-  dx)).*sin(pi*yVy / Ly      );Vy(:,1)=0;Vy(:,end)=0;
-%P    =  p0*cos(pi*xc  /(Lx-  dx)).*cos(pi*yc  /(Ly-  dy));
+% Boundary condition:
+Vx(:,end)=0; Vx(:,1)=v0;
+Vy(1,:)=0; Vy(end,:)=0;
+
+# Notice that the following line initialzed Vx/Vy,P,. It also set the boundary condition for Vx and Vy, if not overwritten by other setup. 2Oct2024
+#Vx   =  v0*sin(pi*xVx / Lx      ).*cos(pi*yVx /(Ly-  dy));Vx(1,:)=0;Vx(end,:)=0;
+#Vy   = -v0*cos(pi*xVy /(Lx-  dx)).*sin(pi*yVy / Ly      );Vy(:,1)=0;Vy(:,end)=0;
+#P    =  p0*cos(pi*xc  /(Lx-  dx)).*cos(pi*yc  /(Ly-  dy));
 
     for iter = 1:niter
         div = (diff(Vx,1,1)/dx+diff(Vy,1,2)/dy);
@@ -78,7 +83,7 @@ Txy  = zeros(nx+1,ny+1);
         RVy1=(diff(Tyy(2:nx-1,:),1,2)/dy+diff(Txy(2:nx,2:ny),1,1)/dx- ...
              diff(P(2:nx-1,:),1,2)/dy- rhosg);
         RVy2=RVy1+dampx*RVy2;
-        Vx(2:nx,2:ny-1) = Vx(2:nx,2:ny-1)+dtau*RVx2;
+        Vx(2:nx,2:ny-1) = Vx(2:nx,2:ny-1)+dtau*RVx2;  # Boundary Vx and Vy are not updated. So the boundary condiction is fixed Vx and Vy from the initialization!
         Vy(2:nx-1,2:ny) = Vy(2:nx-1,2:ny)+dtau*RVy2;
         P = P - dtauP*div;  %P = P - mean(P(:));
 
