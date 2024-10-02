@@ -60,9 +60,9 @@ Txx  = zeros(nx,ny);
 Tyy  = zeros(nx,ny);
 Txy  = zeros(nx+1,ny+1);
 
-Vx   =  v0*sin(pi*xVx / Lx      ).*cos(pi*yVx /(Ly-  dy));Vx(1,:)=0;Vx(end,:)=0;
-Vy   = -v0*cos(pi*xVy /(Lx-  dx)).*sin(pi*yVy / Ly      );Vy(:,1)=0;Vy(:,end)=0;
-P    =  p0*cos(pi*xc  /(Lx-  dx)).*cos(pi*yc  /(Ly-  dy));
+%Vx   =  v0*sin(pi*xVx / Lx      ).*cos(pi*yVx /(Ly-  dy));Vx(1,:)=0;Vx(end,:)=0;
+%Vy   = -v0*cos(pi*xVy /(Lx-  dx)).*sin(pi*yVy / Ly      );Vy(:,1)=0;Vy(:,end)=0;
+%P    =  p0*cos(pi*xc  /(Lx-  dx)).*cos(pi*yc  /(Ly-  dy));
 
     for iter = 1:niter
         div = (diff(Vx,1,1)/dx+diff(Vy,1,2)/dy);
@@ -85,7 +85,7 @@ P    =  p0*cos(pi*xc  /(Lx-  dx)).*cos(pi*yc  /(Ly-  dy));
 
        
         resid = [max(abs(RVx1(:))) max(abs(RVy1(:))) max(abs(div(:)))]; # resisual for each equations
-        if max(resid) < epsi;  break;end
+        if (max(resid) < epsi) & iter>nx;  break;end
        % if any(isnan(Vx),'all');iters(irun) = inf;break;end
         if mod(iter,500) == 0
             subplot(221);imagesc(Vx');axis image;colorbar
