@@ -85,7 +85,7 @@ Txy  = zeros(nx+1,ny+1);
 
        
         resid = [max(abs(RVx1(:))) max(abs(RVy1(:))) max(abs(div(:)))]; # resisual for each equations
-        if (max(resid) < epsi) & iter>nx;  break;end
+        if (max(resid) < epsi) && iter>nx;  break;end
        % if any(isnan(Vx),'all');iters(irun) = inf;break;end
         if mod(iter,500) == 0
             subplot(221);imagesc(Vx');axis image;colorbar
@@ -94,8 +94,8 @@ Txy  = zeros(nx+1,ny+1);
             %subplot(224);semilogy(iter/nx,abs_err,'d');hold on
             residVx=max(abs(RVx1(:)));
             residVy=max(abs(RVy1(:)));
-            residP=max(abs(div(:)));
-            fprintf('Iteration %d, residdVx=%7.3e,residdVy=%7.3e,residdP=%7.3e\n',iter,residVx,residVy,residP); 
+            maxdiv=max(abs(div(:)));
+            fprintf('Iteration %d, residdVx=%7.3e,residdVy=%7.3e,maxdiv=%7.3e\n',iter,residVx,residVy,maxdiv); 
             drawnow
         end
     end
